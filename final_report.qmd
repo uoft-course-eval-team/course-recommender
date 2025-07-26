@@ -1,16 +1,14 @@
 ---
 title: "final_report"
 authors: 
-  -Luka Tosic
-  -Karen Fei Wun
-  -Emily Su
+  - name: Emily Su
+  - name: Luka Tosic
+  - name: Karen Fei Wun Wong
+thanks: "Authors are listed alphabetically by last name." 
 format: pdf
-editor: visual
+bibliography: references.bib
 ---
-
-# Final Report
-
-## Intrduction
+## Introduction
 
 ## Literature Review
 

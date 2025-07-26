@@ -1,0 +1,21 @@
+---
+title: "final_report"
+authors: 
+  -Luka Tosic
+  -Karen Fei Wun
+  -Emily Su
+format: pdf
+editor: visual
+---
+
+# Final Report
+
+## Intrduction
+
+## Literature Review
+
+## Problem Formulation
+
+## Results
+
+## Conclusions

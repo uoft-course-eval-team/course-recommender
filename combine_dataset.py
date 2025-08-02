@@ -1,7 +1,7 @@
 import pandas as pd 
 import re 
 """
-The purpose of this script is to combine the course evaluation datasets with their respective course descriptions.
+The purpose of this script is to combine the course evaluation datasets with their respective course descriptions and preprocess the datasets.
 """
 def preprocessing(new_data): 
     """Remove any links, punctuation, commas, periods, and make everything lowercase"""

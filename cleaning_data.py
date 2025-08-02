@@ -74,8 +74,9 @@ if __name__ == '__main__':
     # Preprocess the new dataset
     new_data = preprocessing(new_data)
     
-    # Make column names lowercase
+    # Make column names lowercase and remove whitespace
     new_data.columns = map(str.lower, new_data.columns)
+    new_data.columns = new_data.columns.str.strip()
     
     # Make column for the target variable, which is 1 (if it's recommended, which is when the "i would recommend this course" is >= 4) and 0 (if it's "not recommended/somewhat recommend", which is when "i would recommend this course" is <4)
     # https://www.geeksforgeeks.org/python/ways-to-apply-an-if-condition-in-pandas-dataframe/

@@ -29,6 +29,7 @@ def preprocessing(new_data):
     
     # Remove extra spacing
     new_data["description"] = new_data['description'].str.replace(' +', ' ', regex=True)
+    new_data["description"] = new_data['description'].str.strip()
 
     return new_data 
 

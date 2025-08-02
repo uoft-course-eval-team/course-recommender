@@ -3,7 +3,7 @@ import numpy as np
 import os
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -12,12 +12,11 @@ from sklearn.preprocessing import MinMaxScaler
 """
 Script implementing neural network 
 """
-# Referenced: https://docs.pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
-# Referenced: https://machinelearningmastery.com/develop-your-first-neural-network-with-pytorch-step-by-step/
-# Referenced: https://www.datacamp.com/tutorial/pytorch-tutorial-building-a-simple-neural-network-from-scratch
+# Global variables 
+BATCH_SIZE = 50
 
 def vectorize_features(the_dataset): 
-    """This function vectorize the features in the dataset"""
+    """This function vectorize the features in <the_dataset>"""
     # https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html
     # Vectorize 
     ct_features = ColumnTransformer(
@@ -44,32 +43,65 @@ def vectorize_features(the_dataset):
     return vectorized_data
     
 def split_dataset(features, targets):
-    """This function splits the dataset into training set, validation set, and test set"""
+    """This function splits the dataset into training set, validation set, and test set where <features> represent the 
+    data and <targets> represent the class the data represent.
+    """
     # Split the entire dataset RANDOMLY into 70% training, 15% validation, and 15% test examples 
-    train_x, test_validation_x, train_y, test_validation_y = train_test_split(features.toarray(), 
-                                                                              targets, train_size = 0.7,
+    train_x, test_validation_x, train_y, test_validation_y = train_test_split(features.toarray(), targets, train_size = 0.7,
                                                                               test_size=0.3, random_state=100)
-    validation_x, test_x, validation_y, test_y = train_test_split(test_validation_x, test_validation_y, 
-                                                                  train_size = 0.5, test_size=0.5, 
+    validation_x, test_x, validation_y, test_y = train_test_split(test_validation_x, test_validation_y, train_size = 0.5, test_size=0.5, 
                                                                   random_state= 100)
     return [train_x, train_y, validation_x, validation_y, test_x, test_y]
+
+def convert_to_dataloaders(train_x, train_y, validation_x, validation_y, test_x, test_y):
+    """This function takes in the training sets (<train_x> and <train_y>), validation set 
+    (<validation_x> and <validation_y>), and test sets (<test_x> and <test_y>)
+    and convert them into tensors then into dataloader objects."""
+
+    # Transform datasets into tensors
+    train_x = torch.tensor(train_x, dtype=torch.float32)
+    train_y = torch.tensor(train_y, dtype=torch.float32)
+    validation_x = torch.tensor(validation_x, dtype=torch.float32)
+    validation_y = torch.tensor(validation_y, dtype=torch.float32)
+    test_x = torch.tensor(train_x, dtype=torch.float32)
+    test_y = torch.tensor(train_y, dtype=torch.float32)
+    
+    # Combine the individual tensors into training set, validation set, and test set
+    # Referenced: https://datascience.stackexchange.com/questions/45916/loading-own-train-data-and-labels-in-dataloader-using-pytorch
+    training_set = TensorDataset(train_x, train_y)
+    validation_set = TensorDataset(validation_x, validation_y)
+    test_set = TensorDataset(test_x, test_y)
+
+    # Initialize dataloaders 
+    training_set_dataloader = DataLoader(dataset=training_set, batch_size=BATCH_SIZE, shuffle=True)
+    validation_set_dataloader = DataLoader(dataset=validation_set, batch_size=BATCH_SIZE, shuffle=True)
+    test_set_dataloader = DataLoader(dataset=test_set, batch_size=BATCH_SIZE, shuffle=True)
+    
+    # for x, y in training_set_dataloader:
+    #     print(f"X's shape: {x.shape}")
+    #     print(f"Y's shape: {y.shape}")
+
+    return training_set_dataloader, validation_set_dataloader, test_set_dataloader
     
 if __name__ == '__main__':
+    # Referenced: https://docs.pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+    # Referenced: https://machinelearningmastery.com/develop-your-first-neural-network-with-pytorch-step-by-step/
+    # Referenced: https://www.datacamp.com/tutorial/pytorch-tutorial-building-a-simple-neural-network-from-scratch
     # Read in CSV file 
     the_dataset = pd.read_csv("data/clean_data/new_data.csv")
     # Vectorize the features in the dataset
     vectorized_dataset_features = vectorize_features(the_dataset)
     print(vectorized_dataset_features.shape)
-    # Dataset containing the targets
-    target_dataset = the_dataset["recommended"]
+    # Dataset containing the targets and turn into numpy array (so we can later turn it into a tensor)
+    target_dataset = np.array(the_dataset["recommended"])
     print(target_dataset.shape)
     # Split dataset into training set, validation set, and test set
     train_x, train_y, validation_x, validation_y, test_x, test_y = split_dataset(vectorized_dataset_features, target_dataset)
     # print(train_x.shape)
     # print(train_y.shape)
-    
     # print(validation_x.shape)
     # print(validation_y.shape)
-    
     # print(test_x.shape)
     # print(test_y.shape)
+    # Convert the datasets into dataloaders for the neural network
+    training_set_dataloader, validation_set_dataloader, test_set_dataloader = convert_to_dataloaders(train_x, train_y, validation_x, validation_y, test_x, test_y)

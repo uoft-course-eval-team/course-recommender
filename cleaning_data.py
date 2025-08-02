@@ -81,6 +81,9 @@ if __name__ == '__main__':
     # https://www.geeksforgeeks.org/python/ways-to-apply-an-if-condition-in-pandas-dataframe/
     new_data["recommended"] = new_data["i would recommend this course"].apply(lambda x: 1 if x >=4 else 0)
     
+    # Drop columns 
+    new_data = new_data.drop(columns=['number invited', 'number responses'])
+    
     # Output new CSV for cleaned dataset
     new_data.to_csv("data/clean_data/new_data.csv", index=False)
 

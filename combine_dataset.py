@@ -3,6 +3,32 @@ import re
 """
 The purpose of this script is to combine the course evaluation datasets with their respective course descriptions.
 """
+def preprocessing(new_data): 
+    """Remove any links, punctuation, commas, periods, and make everything lowercase"""
+    # Make everything lowercase 
+    new_data['Division'] = new_data["Division"].str.lower() 
+    new_data['Dept'] = new_data["Dept"].str.lower() 
+    new_data['course'] = new_data["course"].str.lower() 
+    new_data['Term'] = new_data["Term"].str.lower() 
+    new_data["Last Name"] = new_data["Last Name"].str.lower() 
+    new_data['description'] = new_data["description"].str.lower() 
+    
+    # Remove links
+    # Referenced: https://stackoverflow.com/questions/56358888/how-to-remove-https-links-from-a-string-column-in-pandas for regex pattern
+    new_data["description"] = new_data["description"].str.replace('https?:\/\/[^\s<>"]+|www\.[^\s<>"]+', "", regex=True)
+    
+    # Remove punctuation
+    # Referenced: https://stackoverflow.com/questions/39782418/remove-punctuations-in-pandas for regex pattern
+    new_data["description"] = new_data['description'].str.replace('[^\w\s]+','', regex=True)
+    
+    # Remove commas
+    new_data["description"] = new_data['description'].str.replace(',','')
+    
+    # Remove periods
+    new_data["description"] = new_data['description'].str.replace('.','')
+
+    return new_data 
+
 def return_matching_substring(value):
     """Returns the matching substring of value"""
     # https://stackoverflow.com/questions/68759305/which-pattern-was-matched-among-those-that-i-passed-through-a-regular-expression
@@ -41,6 +67,12 @@ if __name__ == '__main__':
     # Merge with course description 
     new_data = pd.merge(new_data, course_descriptions, on=['course'], how='inner')
     
+    # Preprocess the new dataset
+    new_data = preprocessing(new_data)
+    
+    # Make column names lowercase
+    new_data.columns = map(str.lower, new_data.columns)
+
     # Output new CSV for cleaned dataset
     new_data.to_csv("data/clean_data/new_data.csv", index=False)
 

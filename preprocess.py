@@ -19,13 +19,16 @@ def preprocessing(new_data):
     
     # Remove punctuation
     # Referenced: https://stackoverflow.com/questions/39782418/remove-punctuations-in-pandas for regex pattern
-    new_data["description"] = new_data['description'].str.replace('[^\w\s]+','', regex=True)
+    new_data["description"] = new_data['description'].str.replace('[^\w\s]+',' ', regex=True)
     
     # Remove commas
     new_data["description"] = new_data['description'].str.replace(',','')
     
     # Remove periods
     new_data["description"] = new_data['description'].str.replace('.','')
+    
+    # Remove extra spacing
+    new_data["description"] = new_data['description'].str.replace(' +', ' ', regex=True)
 
     return new_data 
 
@@ -72,7 +75,11 @@ if __name__ == '__main__':
     
     # Make column names lowercase
     new_data.columns = map(str.lower, new_data.columns)
-
+    
+    # Make column for the target variable, which is 1 (if it's recommended, which is when the "i would recommend this course" is >= 4) and 0 (if it's "not recommended/somewhat recommend", which is when "i would recommend this course" is <4)
+    # https://www.geeksforgeeks.org/python/ways-to-apply-an-if-condition-in-pandas-dataframe/
+    new_data["recommended"] = new_data["i would recommend this course"].apply(lambda x: 1 if x >=4 else 0)
+    
     # Output new CSV for cleaned dataset
     new_data.to_csv("data/clean_data/new_data.csv", index=False)
 

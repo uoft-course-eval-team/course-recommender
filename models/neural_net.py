@@ -1,8 +1,8 @@
 import pandas as pd 
 import numpy as np
-import os
 import torch
 from torch import nn
+from torch.optim import optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
@@ -10,10 +10,27 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import MinMaxScaler
 
 """
-Script implementing neural network 
+Script implementing a neural network model that uses the Adam optimizer.
 """
 # Global variables 
-BATCH_SIZE = 50
+batch_size = 50 # Default batch size
+hidden_size = 60
+output_size = 1
+
+class NeuralNetwork(nn.Module):
+    """A neural network that inherits from PyTorch's neural network"""
+    # Referenced: https://www.datacamp.com/tutorial/pytorch-tutorial-building-a-simple-neural-network-from-scratch
+    def __init__(self, input_num, hidden_num, output_num):
+        super().__init__()
+        self.first_layer = nn.Linear(input_num, hidden_num)
+        self.last_layer = nn.Linear(hidden_num, output_num)
+
+    def forward(self, x):
+        # Applies ReLU activation function to the first layer
+        x = torch.nn.functional.relu(self.first_layer) 
+        # Applies sigmoid function to the last layer
+        x = torch.nn.functional.sigmoid(self.last_layer) 
+        return x
 
 def vectorize_features(the_dataset): 
     """This function vectorize the features in <the_dataset>"""
@@ -73,20 +90,42 @@ def convert_to_dataloaders(train_x, train_y, validation_x, validation_y, test_x,
     test_set = TensorDataset(test_x, test_y)
 
     # Initialize dataloaders 
-    training_set_dataloader = DataLoader(dataset=training_set, batch_size=BATCH_SIZE, shuffle=True)
-    validation_set_dataloader = DataLoader(dataset=validation_set, batch_size=BATCH_SIZE, shuffle=True)
-    test_set_dataloader = DataLoader(dataset=test_set, batch_size=BATCH_SIZE, shuffle=True)
+    training_set_dataloader = DataLoader(dataset=training_set, batch_size=batch_size, shuffle=True)
+    validation_set_dataloader = DataLoader(dataset=validation_set, batch_size=batch_size, shuffle=True)
+    test_set_dataloader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
     
     # for x, y in training_set_dataloader:
     #     print(f"X's shape: {x.shape}")
     #     print(f"Y's shape: {y.shape}")
-
-    return training_set_dataloader, validation_set_dataloader, test_set_dataloader
+    #     break
+    # for x, y in validation_set_dataloader:
+    #     print(f"X's shape: {x.shape}")
+    #     print(f"Y's shape: {y.shape}")
+    #     break
+    # for x, y in test_set_dataloader:
+    #     print(f"X's shape: {x.shape}")
+    #     print(f"Y's shape: {y.shape}")
+    #     break
     
+    return training_set_dataloader, validation_set_dataloader, test_set_dataloader
+
+def training_nn(nn_model):
+    """This function trains the neural network <nn_model> using the binary-cross entropy as the loss function
+    and Adam to optimize its parameters (weights and biases)"""
+    
+def validation():
+    """This function iterates through different values for the batch size and the learning rate"""
+
+def check_accuracy():
+    """"""
+def shap():
+    """"""
+
 if __name__ == '__main__':
     # Referenced: https://docs.pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
     # Referenced: https://machinelearningmastery.com/develop-your-first-neural-network-with-pytorch-step-by-step/
     # Referenced: https://www.datacamp.com/tutorial/pytorch-tutorial-building-a-simple-neural-network-from-scratch
+    # Referenced: https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/
     # Read in CSV file 
     the_dataset = pd.read_csv("data/clean_data/new_data.csv")
     # Vectorize the features in the dataset
@@ -105,3 +144,11 @@ if __name__ == '__main__':
     # print(test_y.shape)
     # Convert the datasets into dataloaders for the neural network
     training_set_dataloader, validation_set_dataloader, test_set_dataloader = convert_to_dataloaders(train_x, train_y, validation_x, validation_y, test_x, test_y)
+    
+    # Create neural network model (autoencoder)
+    input_size = train_x.shape[1]
+    nn_model = NeuralNetwork(input_size, hidden_size, output_size)
+    # print(nn_model)
+    
+    # Train neural network
+    trained_nn_model = training_nn(nn_model)

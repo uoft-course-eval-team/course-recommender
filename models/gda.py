@@ -9,7 +9,7 @@ df = pd.read_csv("new_data.csv")
 df.columns = df.columns.str.strip().str.lower()
 df["recommended"] = (df["i would recommend this course"] >= 4).astype(int)
 
-numerical_cols = [  # Features
+numerical_features = [
     "year",
     "item 1 (i found the course intellectually stimulating)",
     "item 2 (the course provided me with a deep understanding of the subject manner)",
@@ -21,26 +21,33 @@ numerical_cols = [  # Features
     "instructor generated enthusiasm",
     "course workload"
 ]
-categorical_cols = ["course", "term", "last name"]
+categorical_features = ["course", "term", "last name"]
 
-df = df.dropna(subset=numerical_cols + ["recommended"])
-df[categorical_cols] = df[categorical_cols].fillna("missing")
-X_cat = pd.get_dummies(df[categorical_cols], drop_first=True).reset_index(drop=True)
-X_num = df[numerical_cols].reset_index(drop=True)
+df = df.dropna(subset=numerical_features + ["recommended"])  # Remove missing features and targets
+df[categorical_features] = df[categorical_features].fillna("missing")
 
-X = pd.concat([X_num, X_cat], axis=1)
+X_cat = pd.get_dummies(df[categorical_features], drop_first=False).reset_index(drop=True)
+X_num = df[numerical_features].reset_index(drop=True)
+
+X = pd.concat([X_num, X_cat], axis=1).astype(np.float32)  # Combine features and convert to float32
 y = df["recommended"].values
+
+# Debug
+# print("X shape:", X.shape)
 
 # Training and testing
 X_train, X_test, y_train, y_test = train_test_split(X.values, y, test_size=0.2, random_state=42)
 
-# Training GDA
+# GDA parameters
 phi = np.mean(y_train)
 mu_0 = np.mean(X_train[y_train == 0], axis=0)
 mu_1 = np.mean(X_train[y_train == 1], axis=0)
 
-sigma = np.cov(X_train.T, bias=True)
-sigma_inv = np.linalg.inv(sigma)
+# Debug
+# print("X_train shape:", X_train.shape)
+
+sigma = np.cov(X_train.T, bias=True)  # Shared covariance matrix (regularized for stability if needed)
+sigma_inv = np.linalg.pinv(sigma)  # use pseudo-inverse for stability
 
 
 def predict_gda(X):  # Prediction
@@ -55,7 +62,7 @@ def predict_gda(X):  # Prediction
     return np.array(y_pred)
 
 
-y_pred = predict_gda(X_test)
+y_pred = predict_gda(X_test)  # Predict and evaluate
 
 # Evaluation
 print("GDA Accuracy:", accuracy_score(y_test, y_pred))
@@ -63,4 +70,5 @@ print(classification_report(y_test, y_pred))
 
 disp = ConfusionMatrixDisplay.from_predictions(y_test, y_pred, cmap="Purples")
 plt.title("GDA Confusion Matrix")
+plt.tight_layout()
 plt.show()

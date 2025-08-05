@@ -5,7 +5,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv("new_data.csv")
+df = pd.read_csv("data/clean_data/new_data.csv")
 df.columns = df.columns.str.strip().str.lower()
 df["recommended"] = (df["i would recommend this course"] >= 4).astype(int)
 

@@ -76,9 +76,9 @@ def split_dataset(features, targets):
     """This function splits the dataset into training set, validation set, and test set where <features> represent the 
     data and <targets> represent the class the data represent.
     """
-    # Split the entire dataset RANDOMLY into 70% training, 15% validation, and 15% test examples 
-    train_x, test_validation_x, train_y, test_validation_y = train_test_split(features, targets, train_size = 0.7,
-                                                                              test_size=0.3, random_state=100)
+    # Split the entire dataset RANDOMLY into 80% training, 10% validation, and 10% test examples 
+    train_x, test_validation_x, train_y, test_validation_y = train_test_split(features, targets, train_size = 0.8,
+                                                                              test_size=0.2, random_state=100)
     validation_x, test_x, validation_y, test_y = train_test_split(test_validation_x, test_validation_y, train_size = 0.5, test_size=0.5, 
                                                                   random_state= 100)
     return [train_x, train_y, validation_x, validation_y, test_x, test_y]

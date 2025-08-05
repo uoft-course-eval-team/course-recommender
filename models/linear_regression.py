@@ -47,6 +47,8 @@ y = df["recommended"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)  # Train/test split
 
 model = LinearRegression()
+# Save the trained model 
+joblib.dump(model, "models/saved_models/linear_regression.sav")
 model.fit(X_train, y_train)
 
 y_pred_score = model.predict(X_test)
@@ -58,9 +60,6 @@ print(classification_report(y_test, y_pred))
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred, cmap="Greens")
 plt.title("Linear Regression Confusion Matrix")
 plt.show()
-
-# Save the trained model 
-joblib.dump(model, "models/saved_models/linear_regression.sav")
 
 # Coefficients
 coef_df = pd.DataFrame({"Feature": X.columns, "Coefficient": model.coef_})

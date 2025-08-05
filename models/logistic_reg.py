@@ -41,6 +41,9 @@ y = df["recommended"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)  # Split
 
 model = LogisticRegression(max_iter=1000)  # Training model
+# Save the trained model 
+joblib.dump(model, "models/saved_models/logistic_regression.sav")
+
 model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)  # Predict
@@ -51,9 +54,6 @@ print(classification_report(y_test, y_pred))
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred, cmap="Blues")
 plt.title("Logistic Regression Confusion Matrix")
 plt.show()
-
-# Save the trained model 
-joblib.dump(model, "models/saved_models/logistic_regression.sav")
 
 # Coefficients
 coef_df = pd.DataFrame({"Feature": X.columns, "Coefficient": model.coef_.flatten()})

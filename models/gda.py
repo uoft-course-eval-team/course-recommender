@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("data/clean_data/new_data.csv")
 df.columns = df.columns.str.strip().str.lower()
-df["recommended"] = (df["i would recommend this course"] >= 4).astype(int)
 
 numerical_features = [
     "year",

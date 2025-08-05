@@ -205,7 +205,7 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     # Create confusion matrix visualizatiuon
     confusion_matrix_results = confusion_matrix(actual_labels, predicted_labels)
     plt.figure()
-    sns.heatmap(confusion_matrix_results, annot=True, cbar=False, fmt="g")
+    sns.heatmap(confusion_matrix_results, annot = True, fmt = "g")
     plt.savefig(f"graphs/confusion_matrix_neural_network.png")
     
 if __name__ == '__main__':

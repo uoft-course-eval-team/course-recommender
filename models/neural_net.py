@@ -203,12 +203,17 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     # Print out classification report
     predicted_labels = list(itertools.chain(*predicted_labels))
     actual_labels = list(itertools.chain(*actual_labels))
-    print(classification_report(actual_labels, predicted_labels))
+    the_report = classification_report(actual_labels, predicted_labels, output_dict=True)
+    the_report_df= pd.DataFrame(the_report)
+    the_report_df.to_csv("graphs/neural_network_table.csv")
     
     # Create confusion matrix visualizatiuon
     confusion_matrix_results = confusion_matrix(actual_labels, predicted_labels)
     plt.figure()
-    sns.heatmap(confusion_matrix_results, annot = True, fmt = "g")
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title("Feedforward Neural Network Confusion Matrix")
+    sns.heatmap(confusion_matrix_results, annot = True, fmt = "g", cbar=False)
     plt.savefig(f"graphs/confusion_matrix_neural_network.png")
 
 def create_shapley_values_graph(nn_model, train_x, train_y, test_x, test_y): 

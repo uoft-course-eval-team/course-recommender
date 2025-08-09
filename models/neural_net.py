@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import itertools
 import joblib
-import shap
 
 """
 Script implementing a feed-forward neural network model that uses the Adam optimizer.
@@ -215,11 +214,6 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     plt.title("Feedforward Neural Network Confusion Matrix")
     sns.heatmap(confusion_matrix_results, annot = True, fmt = "g", cbar=False)
     plt.savefig(f"graphs/confusion_matrix_neural_network.png")
-
-def create_shapley_values_graph(nn_model, train_x, train_y, test_x, test_y): 
-    """Create graph that provides Shapley values for the purposes of interpretability for the neural network."""
-    # Referenced: https://www.datacamp.com/tutorial/introduction-to-shap-values-machine-learning-interpretability
-
     
 if __name__ == '__main__':
     # Referenced: https://docs.pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
@@ -292,6 +286,3 @@ if __name__ == '__main__':
     
     # Confusion matrix
     create_report_confusion_matrix(predicted_labels_test, actual_labels_test)
-    
-    # # Create graph for Shapley values
-    # create_shapley_values_graph(loaded_nn_model, train_x, train_y, test_x, test_y)

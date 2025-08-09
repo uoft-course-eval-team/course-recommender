@@ -21,17 +21,13 @@ class GaussianDiscriminantAnalysis:
             "instructor generated enthusiasm",
             "course workload"
         ]
-        self.categorical_features = ["course", "term", "last name"]
         self.model_trained = False
 
     def load_and_preprocess_data(self):
         df = pd.read_csv(self.csv_path)
         df.columns = df.columns.str.strip().str.lower()
         df = df.dropna(subset=self.numerical_features + ["recommended"])
-        df[self.categorical_features] = df[self.categorical_features].fillna("missing")
 
-        X_cat = pd.get_dummies(df[self.categorical_features], drop_first=False).reset_index(drop=True)
-        X_num = df[self.numerical_features].reset_index(drop=True)
         self.X = pd.concat([X_num, X_cat], axis=1).astype(np.float32)
         self.y = df["recommended"].values
 

@@ -4,7 +4,7 @@
 ![Architecture of project](graphs/architecture.png) 
 
 ## Package Versions
-We recommend using the following versions for the libraries in requirements.txt. 
+We recommend using the following versions for the packages in requirements.txt. 
 ```
 numpy<2
 torch==2.0.1

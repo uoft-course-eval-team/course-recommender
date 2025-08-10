@@ -1,5 +1,8 @@
 # Recommended or Not?: Applying Supervised Machine Learning Models to Understand UofT Course Evaluations
 
+## Project Architecture 
+![Architecture of project](graphs/architecture.png) 
+
 ## Package Versions
 We recommend using the following versions for the libraries in requirements.txt. 
 ```

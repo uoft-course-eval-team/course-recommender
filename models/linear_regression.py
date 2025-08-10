@@ -64,7 +64,8 @@ plt.show()
 # Coefficients
 coef_df = pd.DataFrame({"Feature": X.columns, "Coefficient": model.coef_})
 top_coef = coef_df.reindex(coef_df.Coefficient.abs().sort_values(ascending=False).index)
-
+top_coef["Feature"] = top_coef["Feature"].str.replace(r'^last_name.*', "Instructor", regex = True)
+top_coef["Feature"] = top_coef["Feature"].str.replace(r'^last name.*', "Instructor", regex = True)
 plt.figure(figsize=(10, 6))
 sns.barplot(data=top_coef.head(20), x="Coefficient", y="Feature", palette="crest")
 plt.title("Top 20 Linear Regression Coefficients")

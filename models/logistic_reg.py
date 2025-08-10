@@ -6,6 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 import joblib
+from matplotlib import rcParams
+rcParams.update({'figure.autolayout': True})
 
 df = pd.read_csv("data/clean_data/new_data.csv")
 df.columns = df.columns.str.strip().str.lower()
@@ -58,7 +60,8 @@ plt.show()
 # Coefficients
 coef_df = pd.DataFrame({"Feature": X.columns, "Coefficient": model.coef_.flatten()})
 top_coef = coef_df.reindex(coef_df.Coefficient.abs().sort_values(ascending=False).index)
-
+top_coef["Feature"] = top_coef["Feature"].str.replace(r'^last_name.*', "Instructor", regex = True)
+top_coef["Feature"] = top_coef["Feature"].str.replace(r'^last name.*', "Instructor", regex = True)
 plt.figure(figsize=(10, 6))
 sns.barplot(data=top_coef.head(20), x="Coefficient", y="Feature", palette="coolwarm")
 plt.title("Top 20 Logistic Regression Coefficients")

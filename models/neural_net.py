@@ -25,7 +25,7 @@ output_size = 1
 reg_penalty = 0.001 # Regularization penalty (Prevents overfitting)
 max_features_num = 80000 # To reduce the number of dimensions!
 
-torch.autograd.set_detect_anomaly(True) # Stops the script if it encounters any errors
+# torch.autograd.set_detect_anomaly(True) # Stops the script if it encounters any errors
 
 class NeuralNetwork(nn.Module):
     """A neural network that inherits from PyTorch's neural network"""
@@ -151,7 +151,9 @@ def training_nn(nn_model, training_set, type_of_set, is_validating):
         print(f"Epoch: {epoch}, Average Loss: {average_loss_per_epoch}")
         training_loss_vals += [average_loss_per_epoch]
     
-    if is_validating is False: # This means that we are not finding the optimal hidden dimension number with this function
+    if is_validating is False: 
+        # This means that we are not finding the optimal hidden dimension number with this function and 
+        # Not training from ensemble
         # Create visualization 
         plt.figure()
         plt.title(f"Average loss over epochs for {type_of_set} set")
@@ -205,7 +207,12 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     # Create confusion matrix visualizatiuon
     confusion_matrix_results = confusion_matrix(actual_labels, predicted_labels)
     plt.figure()
-    sns.heatmap(confusion_matrix_results, annot = True, fmt = "g")
+    fig, ax = plt.subplots(figsize=(8,5))
+    plt.title("Feedforward Neural Network Confusion Matrix")
+    sns.heatmap(confusion_matrix_results, annot = True, fmt = "g", cbar=False)
+    ax.set_xlabel('Predicted', fontsize=12)
+    ax.set_ylabel('Actual', fontsize=12)
+    plt.tight_layout()
     plt.savefig(f"graphs/confusion_matrix_neural_network.png")
     
 if __name__ == '__main__':
@@ -261,20 +268,17 @@ if __name__ == '__main__':
     training_nn(nn_model_validation, validation_set_dataloader, "validation", False)
     # On training set
     nn_model = NeuralNetwork(input_size, hidden_size, output_size)
-    training_nn(nn_model, training_set_dataloader, "training", False)
-    
     # Save the trained model 
     joblib.dump(nn_model, "models/saved_models/neural_network.sav")
+    training_nn(nn_model, training_set_dataloader, "training", False)
     
-    # Load back in trained model 
-    loaded_nn_model = joblib.load("models/saved_models/neural_network.sav")
     # Make predictions 
     # On training set 
-    accuracy_val_training, predicted_labels_training, actual_labels_training = prediction(training_set_dataloader, loaded_nn_model)
+    accuracy_val_training, predicted_labels_training, actual_labels_training = prediction(training_set_dataloader, nn_model)
     # On validation set 
-    accuracy_val_validation, predicted_labels_validation, actual_labels_validation = prediction(validation_set_dataloader, loaded_nn_model)
+    accuracy_val_validation, predicted_labels_validation, actual_labels_validation = prediction(validation_set_dataloader, nn_model)
     # On test set
-    accuracy_val_test, predicted_labels_test, actual_labels_test = prediction(test_set_dataloader, loaded_nn_model)
+    accuracy_val_test, predicted_labels_test, actual_labels_test = prediction(test_set_dataloader, nn_model)
     # Print out the accuracies based on the different sets 
     print(f'Accuracy on training set: {accuracy_val_training}')
     print(f'Accuracy on validation set: {accuracy_val_validation}')

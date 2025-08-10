@@ -16,6 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 
 from neural_net import vectorize_features, max_features_num
+import joblib
 
 """
 The purpose of this file is the implementation and visualization of Decision Tree Model
@@ -55,6 +56,9 @@ def treefitter(X, y):
 
 # fit model (why did I make this a function?)
 model_final = treefitter(X_train, y_train)
+
+# Save the model 
+joblib.dump(model_final, "models/saved_models/decision_tree.sav")
 
 #baseline model
 dummy = DummyClassifier(strategy='most_frequent')

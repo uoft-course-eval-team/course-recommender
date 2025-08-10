@@ -207,10 +207,12 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     # Create confusion matrix visualizatiuon
     confusion_matrix_results = confusion_matrix(actual_labels, predicted_labels)
     plt.figure()
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
+    fig, ax = plt.subplots(figsize=(8,5))
     plt.title("Feedforward Neural Network Confusion Matrix")
     sns.heatmap(confusion_matrix_results, annot = True, fmt = "g", cbar=False)
+    ax.set_xlabel('Predicted', fontsize=12)
+    ax.set_ylabel('Actual', fontsize=12)
+    plt.tight_layout()
     plt.savefig(f"graphs/confusion_matrix_neural_network.png")
     
 if __name__ == '__main__':

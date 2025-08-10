@@ -202,9 +202,7 @@ def create_report_confusion_matrix(predicted_labels, actual_labels):
     # Print out classification report
     predicted_labels = list(itertools.chain(*predicted_labels))
     actual_labels = list(itertools.chain(*actual_labels))
-    the_report = classification_report(actual_labels, predicted_labels, output_dict=True)
-    the_report_df= pd.DataFrame(the_report)
-    the_report_df.to_csv("graphs/neural_network_table.csv")
+    print(classification_report(actual_labels, predicted_labels))
     
     # Create confusion matrix visualizatiuon
     confusion_matrix_results = confusion_matrix(actual_labels, predicted_labels)

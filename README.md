@@ -1,7 +1,7 @@
 # Recommended or Not?: Applying Supervised Machine Learning Models to Understand UofT Course Evaluations
 
 ## Package Versions
-We recommend using the following versions for the libraries in requirements.txt (excluding `shap`). 
+We recommend using the following versions for the libraries in requirements.txt. 
 ```
 numpy<2
 torch==2.0.1

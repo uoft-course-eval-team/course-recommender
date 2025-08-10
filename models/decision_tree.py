@@ -58,7 +58,7 @@ def treefitter(X, y):
 model_final = treefitter(X_train, y_train)
 
 # Save the model 
-joblib.dump(model_final, "models/saved_models/logistic_regression.sav")
+joblib.dump(model_final, "models/saved_models/decision_tree.sav")
 
 #baseline model
 dummy = DummyClassifier(strategy='most_frequent')

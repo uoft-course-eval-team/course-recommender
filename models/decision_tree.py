@@ -95,7 +95,7 @@ print(project_root)
 
 #confusion matrix
 plt.figure(figsize=(6, 5))
-sns.heatmap(con_mat, annot=True, fmt='d', cmap='Blues', cbar=False)
+sns.heatmap(con_mat, annot=True, fmt='d', cmap='Blues', cbar=True)
 plt.title('Confusion Matrix')
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
